@@ -55,6 +55,38 @@ app.use(cookieParser);
 app.use(logger);
 app.use(headerChecker);
 */
+const allScopes = [
+    'ugc-image-upload',
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    'app-remote-control',
+    'streaming',
+    'playlist-read-private',
+    'playlist-read-collaborative',
+    'playlist-modify-private',
+    'playlist-modify-public',
+    'user-follow-modify',
+    'user-follow-read',
+    'user-read-playback-position',
+    'user-top-read',
+    'user-read-recently-played',
+    'user-library-modify',
+    'user-library-read',
+    'user-read-email',
+    'user-read-private',
+    'user-soa-link',
+    'user-soa-unlink',
+    'soa-manage-entitlements',
+    'soa-manage-partner',
+    'soa-create-partner'
+].join(' ');
+console.log(allScopes);
+const currScope = [
+    "user-read-private",
+    "user-read-email",
+    "user-top-read"
+].join(' ');
 const spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
 const spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 let access_token = "";
@@ -75,7 +107,7 @@ app.get('/auth/login', (req, res) => {
     const auth_query_parameters = new URLSearchParams({
         response_type: "code",
         client_id: spotify_client_id,
-        scope: scope,
+        scope: currScope,
         redirect_uri: "http://localhost:5000/auth/callback",
         state: state
     });
@@ -99,7 +131,7 @@ app.get('/auth/callback', (req, res) => {
     request_1.default.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             access_token = body.access_token;
-            res.redirect(`http://localhost:3000`);
+            res.redirect(`http://localhost:3000/home`);
         }
     });
 });
